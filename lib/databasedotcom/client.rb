@@ -36,6 +36,12 @@ module Databasedotcom
     attr_accessor :ca_file
     # The SSL verify mode configured for this instance, if any
     attr_accessor :verify_mode
+    # The HTTP proxy host to connect through, if any
+    attr_accessor :proxy
+    # The username to use when connecting through an HTTP proxy, if any
+    attr_accessor :proxy_username
+    # The password to use when connecting through an HTTP proxy, if any
+    attr_accessor :proxy_password
 
     # Returns a new client object. _options_ can be one of the following
     #
@@ -91,6 +97,9 @@ module Databasedotcom
       self.ca_file = ENV['DATABASEDOTCOM_CA_FILE'] || @options[:ca_file]
       self.verify_mode = ENV['DATABASEDOTCOM_VERIFY_MODE'] || @options[:verify_mode]
       self.verify_mode = self.verify_mode.to_i if self.verify_mode
+      self.proxy = ENV['HTTP_PROXY'] || @options[:proxy]
+      self.proxy_username = @options[:proxy_username]
+      self.proxy_password = @options[:proxy_password]
     end
 
     # Authenticate to the Force.com API.  _options_ is a Hash, interpreted as follows:

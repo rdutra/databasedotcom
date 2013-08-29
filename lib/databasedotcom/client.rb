@@ -380,8 +380,20 @@ module Databasedotcom
     end
 
     def https_request(host=nil)
-      Net::HTTP.new(host || URI.parse(self.instance_url).host, 443).tap do |http|
-        http.use_ssl = true
+      if self.proxy
+        proxy_uri = URI(self.proxy)
+        proxy_host, proxy_port = proxy_uri.host, proxy_uri.port
+      else
+        proxy_host = proxy_port = nil
+      end
+
+      Net::HTTP.new(host || URI.parse(self.instance_url).host,
+                    443,
+                    proxy_host,
+                    proxy_port,
+                    proxy_username,
+                    proxy_password).tap do |http| 
+        http.use_ssl = true 
         http.ca_file = self.ca_file if self.ca_file
         http.verify_mode = self.verify_mode if self.verify_mode
       end
